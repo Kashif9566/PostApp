@@ -13,7 +13,7 @@
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 475px; /* Set the desired width */
-  height: 530px; /* Set the desired height */
+  height: 590px; /* Set the desired height */
   border: 1px solid #ccc; /* Add a border for visual separation */
   margin: 70px; /* Add some margin for spacing between cards */
 }
@@ -87,3 +87,4 @@
 .separator-line {
   border-bottom: 1px solid #ccc; /* Adjust the border style as needed */
 }
+/* Navbar.css */

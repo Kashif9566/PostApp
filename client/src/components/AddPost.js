@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./addpost.css";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+
 const AddPost = ({ userId }) => {
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState(null);
@@ -15,25 +17,43 @@ const AddPost = ({ userId }) => {
     setImage(file);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const token = localStorage.getItem("jwtToken");
+    const decoded = jwtDecode(token);
+    userId = decoded.user.id;
+    console.log("Token:", token);
+    console.log("UserId:", userId);
+
+    if (!token) {
+      console.error("User not authenticated");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("caption", caption);
     formData.append("image", image);
 
-    fetch(`http://localhost:5000/post/${userId}`, {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Post created:", data);
-      })
-      .catch((error) => {
-        console.error("Error creating post:", error);
+    try {
+      const response = await fetch(`http://localhost:5000/post/${userId}`, {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
-    Navigate("/");
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Post created:", data);
+        Navigate("/profile");
+      } else {
+        console.error("Error creating post:", response.status);
+      }
+    } catch (error) {
+      console.error("Error creating post:", error);
+    }
   };
 
   return (

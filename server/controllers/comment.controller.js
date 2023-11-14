@@ -7,7 +7,10 @@ exports.create = async (req, res) => {
   const { content } = req.body;
   try {
     const newComment = await Comment.create({ userId, postId, content });
-    res.json(newComment);
+    const commentWithUser = await Comment.findByPk(newComment.id, {
+      include: [{ model: User, as: "users" }],
+    });
+    res.json(commentWithUser);
   } catch (error) {
     console.log(error);
   }
@@ -17,7 +20,13 @@ exports.findAllByPost = async (req, res) => {
   const { postId } = req.params;
   try {
     const postWithComments = await Post.findByPk(postId, {
-      include: [{ model: Comment, as: "comments" }],
+      include: [
+        {
+          model: Comment,
+          as: "comments",
+          include: [{ model: User, as: "users" }],
+        },
+      ],
     });
     res.json(postWithComments.comments);
   } catch (error) {

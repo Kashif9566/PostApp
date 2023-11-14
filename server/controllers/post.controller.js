@@ -19,7 +19,7 @@ exports.create = async (req, res) => {
 
     //post with user
     const postWithUser = await Post.findByPk(newPost.id, {
-      include: [{ model: User, as: "users", attributes: ["username"] }],
+      include: [{ model: User, as: "users" }],
     });
     res.json(postWithUser);
   } catch (error) {
@@ -36,7 +36,7 @@ exports.findAll = async (req, res) => {
         {
           model: Post,
           as: "posts",
-          include: [{ model: User, as: "users", attributes: ["username"] }],
+          include: [{ model: User, as: "users" }],
         },
       ],
     });
@@ -59,7 +59,6 @@ exports.findAllPostsOfAllUsers = async (req, res) => {
         {
           model: User,
           as: "users",
-          attributes: ["username"],
         },
       ],
     });

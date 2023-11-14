@@ -1,23 +1,37 @@
 import React, { useEffect, useState } from "react";
-import PostCard from "./PostCard";
+
+import AddPost from "./AddPost";
+import { jwtDecode } from "jwt-decode";
+import AllPostList from "./AllPostList";
 
 const Home = () => {
-  const [posts, setPosts] = useState([]);
+  const token = localStorage.getItem("jwtToken");
+  const decodedToken = jwtDecode(token);
+  const userId = decodedToken.user.id;
+
+  const [allPosts, setAllPosts] = useState([]);
+
   useEffect(() => {
-    const fecthData = async () => {
+    const fetchAllPosts = async () => {
       try {
-        const response = await fetch("http://localhost:5000/post/all");
-        const data = await response.json();
-        setPosts(data);
+        const response = await fetch("https://localhost:5000/post/all");
+        if (response.ok) {
+          const post = await response.json();
+          setAllPosts(post);
+        } else {
+          console.error("Error fetching user posts", response.status);
+        }
       } catch (error) {
-        console.log(error);
+        console.error("Error fetching all posts", error);
       }
     };
-    fecthData();
+    fetchAllPosts();
   }, []);
   return (
     <div className="container">
-      <PostCard posts={posts} setPosts={setPosts} />
+      <AddPost userId={userId} />
+      <h1>All posts</h1>
+      <AllPostList allPosts={allPosts} setAllPosts={setAllPosts} />
     </div>
   );
 };

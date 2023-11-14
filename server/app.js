@@ -4,8 +4,8 @@ const cors = require("cors");
 const app = express();
 const sequelize = require("./config/db.config");
 app.use(cors());
-
 app.use(express.json());
+
 //static files from the 'uploads' directory
 app.use("/uploads", express.static("uploads"));
 

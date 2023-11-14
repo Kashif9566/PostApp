@@ -1,14 +1,13 @@
 import React from "react";
 import { useState } from "react";
-import "./comments.css";
-const AddComment = ({ postId, setComments }) => {
+const AddComment = ({ postId, setComments, userId, postID }) => {
   const [newComment, setNewComment] = useState("");
   const handleCommentSubmit = async (e) => {
     e.preventDefault();
     try {
       console.log("Submitting comment...");
       const response = await fetch(
-        `http://localhost:5000/comment/post/${postId}`,
+        `http://localhost:5000/comments/user/${userId}/post/${postID}`,
         {
           method: "POST",
           headers: {
